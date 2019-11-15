@@ -1,11 +1,13 @@
 package ea.sof.ms_comments.controller;
 
 
-import ea.sof.ms_comments.entity.CommentEntity;
+import ea.sof.ms_comments.entity.CommentAnswerEntity;
+import ea.sof.ms_comments.entity.CommentQuestionEntity;
 import ea.sof.ms_comments.model.CommentReqModel;
-import ea.sof.ms_comments.repository.CommentRepository;
-import ea.sof.shared.models.Answer;
-import ea.sof.shared.models.Comment;
+import ea.sof.ms_comments.repository.CommentAnswerRepository;
+import ea.sof.ms_comments.repository.CommentQuestionRepository;
+import ea.sof.shared.models.CommentAnswer;
+import ea.sof.shared.models.CommentQuestion;
 import ea.sof.shared.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/comments")
 public class CommentController {
     @Autowired
-    CommentRepository commentRepository;
+    CommentAnswerRepository commentAnswerRepository;
 
-    @GetMapping("/question/{questionId}")
+    @Autowired
+    CommentQuestionRepository commentQuestionRepository;
+
+    @GetMapping("/questions/{questionId}")
     public ResponseEntity<?> getAllCommentsByQuestionId(@PathVariable("questionId") String questionId) {
-        List<CommentEntity> commentEntities = commentRepository.findCommentEntitiesByQuestionId(questionId);
-        List<Comment> comments = commentEntities.stream().map(cm -> cm.toCommentModel()).collect(Collectors.toList());
+        List<CommentQuestionEntity> commentQuestionEntities = commentQuestionRepository.findCommentQuestionEntitiesByQuestionId(questionId);
+        List<CommentQuestion> comments = commentQuestionEntities.stream().map(cm -> cm.toCommentQuestionModel()).collect(Collectors.toList());
 
         Response response = new Response(true, "");
         response.getData().put("comments", comments);
@@ -33,28 +38,39 @@ public class CommentController {
     }
 
     //todo: add getAllCommentsByAnswerId
+    @GetMapping("/answers/{answerId}")
+    public ResponseEntity<?> getAllCommentsByAnswerId(@PathVariable("answerId") String answerId) {
+        List<CommentAnswerEntity> commentEntities = commentAnswerRepository.findCommentAnswerEntitiesByAnswerId(answerId);
+        List<CommentAnswer> comments = commentEntities.stream().map(cm -> cm.toCommentAnswerModel()).collect(Collectors.toList());
 
-    @PostMapping("/question/{questionId}")
+        Response response = new Response(true, "");
+        response.getData().put("comments", comments);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PostMapping("/questions/{questionId}")
     public ResponseEntity<?> createCommentForQuestion(@RequestBody @Valid CommentReqModel commentReqModel, @PathVariable("questionId") String questionId) {
 
-        CommentEntity commentEntity = new CommentEntity(commentReqModel);
-        commentEntity.setQuestionId(questionId);
+        CommentQuestionEntity commentQuestionEntity = new CommentQuestionEntity(commentReqModel);
+        commentQuestionEntity.setQuestionId(questionId);
 
         Response response = new Response(true, "Comment has been created");
-        commentEntity = commentRepository.save(commentEntity);
-        response.getData().put("comment", commentEntity);
+        commentQuestionEntity = commentQuestionRepository.save(commentQuestionEntity);
+        response.getData().put("comment", commentQuestionEntity);
         return ResponseEntity.status(201).body(response);
     }
 
-    @PostMapping("/answer/{answerId}")
+    @PostMapping("/answers/{answerId}")
     public ResponseEntity<?> createCommentForAnswer(@RequestBody @Valid CommentReqModel commentReqModel, @PathVariable("answerId") String answerId) {
 
-        CommentEntity commentEntity = new CommentEntity(commentReqModel);
-        commentEntity.setAnswerId(answerId);
+        CommentAnswerEntity commentAnswerEntity = new CommentAnswerEntity(commentReqModel);
+        commentAnswerEntity.setAnswerId(answerId);
 
         Response response = new Response(true, "Comment has been created");
-        commentEntity = commentRepository.save(commentEntity);
-        response.getData().put("comment", commentEntity);
+        commentAnswerEntity = commentAnswerRepository.save(commentAnswerEntity);
+        response.getData().put("comment", commentAnswerEntity);
         return ResponseEntity.status(201).body(response);
     }
 }

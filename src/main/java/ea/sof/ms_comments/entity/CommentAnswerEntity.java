@@ -1,7 +1,7 @@
 package ea.sof.ms_comments.entity;
 
 import ea.sof.ms_comments.model.CommentReqModel;
-import ea.sof.shared.models.Comment;
+import ea.sof.shared.models.CommentAnswer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -12,30 +12,27 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data
-@Document(collection = "comments")
-public class CommentEntity {
+@Document(collection = "answer_comments")
+public class CommentAnswerEntity {
     @Id
     private String id;
     private String userId;
     private String body;
     private LocalDateTime created;
-    private String questionId;
     private String answerId;
 
-    public CommentEntity(CommentReqModel commentReqModel) {
+    public CommentAnswerEntity(CommentReqModel commentReqModel) {
         this.body = commentReqModel.getBody();
         this.created = LocalDateTime.now();
     }
 
-    public Comment toCommentModel() {
-        Comment commentModel = new Comment();
+    public CommentAnswer toCommentAnswerModel() {
+        CommentAnswer commentModel = new CommentAnswer();
         commentModel.setId(this.id);
         commentModel.setBody(this.body);
         commentModel.setDate(this.created);
-        commentModel.setQuestionId(this.questionId);
+        commentModel.setAnswerId(this.answerId);
 
-        //todo: why comment model didn't have answerId
-        //todo: why comment model has userName;
         return commentModel;
     }
 }
