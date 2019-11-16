@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: question-ms
+  namespace: default
+data:
+  MONGODB_HOST: "mongodb-sharded-1573848232.default.svc.cluster.local"
+  MONGODB_PORT: "27017"
+  MONGODB_PASS: "comments"
+  MONGODB_USERNAME: "comments"
+  MONGODB_DATABASE: "comments"
+  MONGODB_AUTH: "comments"
