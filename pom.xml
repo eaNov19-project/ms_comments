@@ -83,6 +83,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>ms_comments</finalName>
     </build>
     <repositories>
         <repository>
