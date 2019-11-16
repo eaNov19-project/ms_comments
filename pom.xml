@@ -81,9 +81,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <finalName>ms_comments</finalName>
+                </configuration>
             </plugin>
         </plugins>
-        <finalName>ms_comments</finalName>
     </build>
     <repositories>
         <repository>
