@@ -5,7 +5,7 @@ metadata:
   labels:
     app: comment-ms
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: comment-ms
@@ -16,9 +16,7 @@ spec:
     spec:
       containers:
         - name: comment-ms
-          image: islamahmad/comment-ms:1.0.0
-          ports:
-            - containerPort: 8082
+          image: islamahmad/eaproj-commentms:1.0.0
           env:
             #MONGODB
             - name: MONGODB_HOST
@@ -51,3 +49,8 @@ spec:
                 configMapKeyRef:
                   name: comment-ms
                   key: MONGODB_DATABASE
+            - name: AUTHENTICATE_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: comment-ms
+                  key: AUTHENTICATE_SERVICE
