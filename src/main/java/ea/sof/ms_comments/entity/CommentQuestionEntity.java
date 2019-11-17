@@ -32,7 +32,8 @@ public class CommentQuestionEntity {
         commentModel.setBody(this.body);
         commentModel.setDate(this.created);
         commentModel.setQuestionId(this.questionId);
-
+        commentModel.setUserId(this.userId);
+        //todo: commentModel.setUserName();
         return commentModel;
     }
 }

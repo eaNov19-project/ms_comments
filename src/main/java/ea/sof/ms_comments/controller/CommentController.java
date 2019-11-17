@@ -1,6 +1,7 @@
 package ea.sof.ms_comments.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ea.sof.ms_comments.entity.CommentAnswerEntity;
 import ea.sof.ms_comments.entity.CommentQuestionEntity;
 import ea.sof.ms_comments.model.CommentReqModel;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/comments")
+@CrossOrigin
 public class CommentController {
     @Autowired
     CommentAnswerRepository commentAnswerRepository;
@@ -64,12 +66,14 @@ public class CommentController {
         if (!authCheckResp.getSuccess()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response(false, "Invalid Token"));
         }
-        TokenUser decodedToken = (TokenUser) authCheckResp.getData().get("decoded_token");
+        //TokenUser decodedToken = (TokenUser) authCheckResp.getData().get("decoded_token");
 
+        ObjectMapper mapper = new ObjectMapper();
+        TokenUser decodedToken = mapper.convertValue(authCheckResp.getData().get("decoded_token"), TokenUser.class);
         CommentQuestionEntity commentQuestionEntity = new CommentQuestionEntity(commentReqModel);
         commentQuestionEntity.setQuestionId(questionId);
         commentQuestionEntity.setUserId(decodedToken.getUserId().toString());
-
+        //todo: setUsername
         Response response = new Response(true, "Comment has been created");
         commentQuestionEntity = commentQuestionRepository.save(commentQuestionEntity);
         response.getData().put("comment", commentQuestionEntity.toCommentQuestionModel());
@@ -84,12 +88,13 @@ public class CommentController {
         if (!authCheckResp.getSuccess()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response(false, "Invalid Token"));
         }
-        TokenUser decodedToken = (TokenUser) authCheckResp.getData().get("decoded_token");
-
+        //TokenUser decodedToken = (TokenUser) authCheckResp.getData().get("decoded_token");
+        ObjectMapper mapper = new ObjectMapper();
+        TokenUser decodedToken = mapper.convertValue(authCheckResp.getData().get("decoded_token"), TokenUser.class);
         CommentAnswerEntity commentAnswerEntity = new CommentAnswerEntity(commentReqModel);
         commentAnswerEntity.setAnswerId(answerId);
         commentAnswerEntity.setUserId(decodedToken.getUserId().toString());
-
+        //todo: setUsername
         Response response = new Response(true, "Comment has been created");
         commentAnswerEntity = commentAnswerRepository.save(commentAnswerEntity);
         response.getData().put("comment", commentAnswerEntity.toCommentAnswerModel());
