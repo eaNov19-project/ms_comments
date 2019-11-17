@@ -10,4 +10,4 @@ data:
   MONGODB_USERNAME: "comments"
   MONGODB_DATABASE: "comments"
   MONGODB_AUTH: "comments"
-  AUTHENTICATE_SERVICE: "authentication-service.default.svc.cluster.local:8080/auth"
+  AUTHENTICATE_SERVICE: "auth-ms-service.default.svc.cluster.local:8080"
