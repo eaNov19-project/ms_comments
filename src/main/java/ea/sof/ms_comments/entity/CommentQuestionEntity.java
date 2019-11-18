@@ -31,7 +31,7 @@ public class CommentQuestionEntity {
         CommentQuestion commentModel = new CommentQuestion();
         commentModel.setId(this.id);
         commentModel.setBody(this.body);
-        commentModel.setDate(this.created);
+        commentModel.setCreated(this.created);
         commentModel.setQuestionId(this.questionId);
         commentModel.setUserId(this.userId);
         //todo: commentModel.setUserName();

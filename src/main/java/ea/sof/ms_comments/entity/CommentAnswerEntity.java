@@ -2,8 +2,7 @@ package ea.sof.ms_comments.entity;
 
 import ea.sof.ms_comments.model.CommentReqModel;
 import ea.sof.shared.models.CommentAnswer;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,7 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 @Document(collection = "answer_comments")
 public class CommentAnswerEntity {
     @Id
@@ -30,7 +31,7 @@ public class CommentAnswerEntity {
         CommentAnswer commentModel = new CommentAnswer();
         commentModel.setId(this.id);
         commentModel.setBody(this.body);
-        commentModel.setDate(this.created);
+        commentModel.setCreated(this.created);
         commentModel.setAnswerId(this.answerId);
         commentModel.setUserId(this.userId);
         //todo: commentModel.setUserName();
