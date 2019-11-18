@@ -23,6 +23,7 @@ public class CommentAnswerEntity {
     private String body;
     private LocalDateTime created;
     private String answerId;
+    private Integer active;
 
     public CommentAnswerEntity(CommentReqModel commentReqModel) {
         this.body = commentReqModel.getBody();
@@ -37,6 +38,7 @@ public class CommentAnswerEntity {
         commentModel.setAnswerId(this.answerId);
         commentModel.setUserId(this.userId);
         //todo: commentModel.setUserName();
+        commentModel.setActive(this.active);
         return commentModel;
     }
 
@@ -44,6 +46,7 @@ public class CommentAnswerEntity {
         CommentAnswerQueueModel commentAnswerQueueModel = new CommentAnswerQueueModel();
         commentAnswerQueueModel.setId(this.id);
         commentAnswerQueueModel.setBody(this.body);
+        commentAnswerQueueModel.setActive(this.active);
         return commentAnswerQueueModel;
     }
 }

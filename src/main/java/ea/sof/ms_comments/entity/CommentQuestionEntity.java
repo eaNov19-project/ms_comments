@@ -24,6 +24,7 @@ public class CommentQuestionEntity {
     private String body;
     private LocalDateTime created;
     private String questionId;
+    private Integer active;
 
     public CommentQuestionEntity(CommentReqModel commentReqModel) {
         this.body = commentReqModel.getBody();
@@ -31,20 +32,22 @@ public class CommentQuestionEntity {
     }
 
     public CommentQuestion toCommentQuestionModel() {
-        CommentQuestion commentModel = new CommentQuestion();
-        commentModel.setId(this.id);
-        commentModel.setBody(this.body);
-        commentModel.setCreated(this.created);
-        commentModel.setQuestionId(this.questionId);
-        commentModel.setUserId(this.userId);
+        CommentQuestion commentQuestionModel = new CommentQuestion();
+        commentQuestionModel.setId(this.id);
+        commentQuestionModel.setBody(this.body);
+        commentQuestionModel.setCreated(this.created);
+        commentQuestionModel.setQuestionId(this.questionId);
+        commentQuestionModel.setUserId(this.userId);
         //todo: commentModel.setUserName();
-        return commentModel;
+        commentQuestionModel.setActive(this.active);
+        return commentQuestionModel;
     }
 
     public CommentQuestionQueueModel toCommentQuestionQueueModel() {
         CommentQuestionQueueModel commentQuestionQueueModel = new CommentQuestionQueueModel();
         commentQuestionQueueModel.setId(this.id);
         commentQuestionQueueModel.setBody(this.body);
+        commentQuestionQueueModel.setActive(this.active);
         return commentQuestionQueueModel;
     }
 }
