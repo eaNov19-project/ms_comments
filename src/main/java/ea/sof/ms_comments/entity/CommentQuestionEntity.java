@@ -2,6 +2,7 @@ package ea.sof.ms_comments.entity;
 
 import ea.sof.ms_comments.model.CommentReqModel;
 import ea.sof.shared.models.CommentQuestion;
+import ea.sof.shared.queue_models.CommentQuestionQueueModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,5 +39,12 @@ public class CommentQuestionEntity {
         commentModel.setUserId(this.userId);
         //todo: commentModel.setUserName();
         return commentModel;
+    }
+
+    public CommentQuestionQueueModel toCommentQuestionQueueModel() {
+        CommentQuestionQueueModel commentQuestionQueueModel = new CommentQuestionQueueModel();
+        commentQuestionQueueModel.setId(this.id);
+        commentQuestionQueueModel.setBody(this.body);
+        return commentQuestionQueueModel;
     }
 }

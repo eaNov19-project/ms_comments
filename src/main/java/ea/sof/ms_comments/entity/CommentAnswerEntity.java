@@ -2,6 +2,8 @@ package ea.sof.ms_comments.entity;
 
 import ea.sof.ms_comments.model.CommentReqModel;
 import ea.sof.shared.models.CommentAnswer;
+import ea.sof.shared.queue_models.CommentAnswerQueueModel;
+import ea.sof.shared.queue_models.CommentQuestionQueueModel;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -36,5 +38,12 @@ public class CommentAnswerEntity {
         commentModel.setUserId(this.userId);
         //todo: commentModel.setUserName();
         return commentModel;
+    }
+
+    public CommentAnswerQueueModel toCommentAnswerQueueModel() {
+        CommentAnswerQueueModel commentAnswerQueueModel = new CommentAnswerQueueModel();
+        commentAnswerQueueModel.setId(this.id);
+        commentAnswerQueueModel.setBody(this.body);
+        return commentAnswerQueueModel;
     }
 }
