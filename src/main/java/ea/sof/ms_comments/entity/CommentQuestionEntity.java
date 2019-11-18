@@ -2,6 +2,7 @@ package ea.sof.ms_comments.entity;
 
 import ea.sof.ms_comments.model.CommentReqModel;
 import ea.sof.shared.models.CommentQuestion;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
 @Document(collection = "question_comments")
 public class CommentQuestionEntity {
     @Id
