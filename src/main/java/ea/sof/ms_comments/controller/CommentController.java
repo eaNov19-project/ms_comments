@@ -2,6 +2,7 @@ package ea.sof.ms_comments.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import ea.sof.ms_comments.entity.CommentAnswerEntity;
 import ea.sof.ms_comments.entity.CommentQuestionEntity;
 import ea.sof.ms_comments.model.CommentReqModel;
@@ -13,8 +14,10 @@ import ea.sof.shared.models.CommentQuestion;
 import ea.sof.shared.models.Response;
 import ea.sof.shared.models.TokenUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,6 +29,12 @@ import java.util.stream.Collectors;
 @CrossOrigin
 public class CommentController {
     @Autowired
+    KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    private Environment env;
+
+    @Autowired
     CommentAnswerRepository commentAnswerRepository;
 
     @Autowired
@@ -34,6 +43,7 @@ public class CommentController {
     @Autowired
     AuthService authService;
 
+    private Gson gson = new Gson();
 
     @GetMapping("/questions/{questionId}")
     public ResponseEntity<?> getAllCommentsByQuestionId(@PathVariable("questionId") String questionId) {
@@ -77,6 +87,10 @@ public class CommentController {
         Response response = new Response(true, "Comment has been created");
         commentQuestionEntity = commentQuestionRepository.save(commentQuestionEntity);
         response.getData().put("comment", commentQuestionEntity.toCommentQuestionModel());
+
+
+        kafkaTemplate.send(env.getProperty("topicNewQuestionComment"), gson.toJson(commentQuestionEntity));
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -98,6 +112,10 @@ public class CommentController {
         Response response = new Response(true, "Comment has been created");
         commentAnswerEntity = commentAnswerRepository.save(commentAnswerEntity);
         response.getData().put("comment", commentAnswerEntity.toCommentAnswerModel());
+
+
+        kafkaTemplate.send(env.getProperty("topicNewAnswerComment"), gson.toJson(commentAnswerEntity));
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
