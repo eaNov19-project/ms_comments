@@ -49,16 +49,19 @@ spec:
                 configMapKeyRef:
                   name: comment-ms
                   key: MONGODB_DATABASE
+
+            # SERVICES
             - name: AUTHENTICATE_SERVICE
               valueFrom:
                 configMapKeyRef:
-                  name: comment-ms
+                  name: services-global
                   key: AUTHENTICATE_SERVICE
+
             #KAFKA
             - name: KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:
-                  name: kafka-global
+                  name: services-global
                   key: KAFKA_BOOTSTRAP_SERVERS
             - name: TOPIC_NEW_QUESTION_COMMENT
               valueFrom:
