@@ -20,6 +20,7 @@ public class CommentAnswerEntity {
     @Id
     private String id;
     private String userId;
+    private String userEmail;
     private String body;
     private LocalDateTime created;
     private String answerId;
@@ -37,7 +38,7 @@ public class CommentAnswerEntity {
         commentModel.setCreated(this.created);
         commentModel.setAnswerId(this.answerId);
         commentModel.setUserId(this.userId);
-        //todo: commentModel.setUserName();
+        commentModel.setUserEmail(this.userEmail);
         commentModel.setActive(this.active);
         return commentModel;
     }
