@@ -1,5 +1,5 @@
 DOCKERHUBREPO=islamahmad
-IMAGE=${DOCKERHUBREPO}/eaproj-commentms:1.0.6
+IMAGE=${DOCKERHUBREPO}/eaproj-commentms:1.0.7
 
 # ===== Maven =====
 maven-rebuild:
@@ -26,3 +26,14 @@ k8-delete:
 
 k8-repush-restart: k8-delete docker-push k8-install
 
+
+
+
+build:
+	 mvn clean && mvn install && docker build -t ${IMAGE} . && docker push $(IMAGE)
+
+config:
+	kubectl apply -f k8s-config.yaml
+
+deploy:
+	kubectl apply -f k8s-deploy.yaml
