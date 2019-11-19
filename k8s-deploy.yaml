@@ -16,8 +16,11 @@ spec:
     spec:
       containers:
         - name: comment-ms
-          image: islamahmad/eaproj-commentms:1.0.0
+          image: islamahmad/eaproj-commentms:1.0.6
           env:
+            - name: SERVER_PORT
+              value: "8080"
+
             #MONGODB
             - name: MONGODB_HOST
               valueFrom:
