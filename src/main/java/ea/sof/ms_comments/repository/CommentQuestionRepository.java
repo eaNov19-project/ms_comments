@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface CommentQuestionRepository extends MongoRepository<CommentQuestionEntity, String> {
     Optional<CommentQuestionEntity> findById(String id);
 
-    List<CommentQuestionEntity> findCommentQuestionEntitiesByQuestionId(String questionId);
+    List<CommentQuestionEntity> findCommentQuestionEntitiesByQuestionIdAndActiveEquals(String questionId, Integer active);
 
 }
