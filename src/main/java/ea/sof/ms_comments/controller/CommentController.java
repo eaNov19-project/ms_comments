@@ -21,6 +21,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +46,18 @@ public class CommentController {
     AuthService authService;
 
     private Gson gson = new Gson();
+
+    @GetMapping("/health")
+    public ResponseEntity<String> index() {
+        String host = "Unknown host";
+        try {
+            host = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>("Comments service. Host: " + host, HttpStatus.OK);
+    }
 
     @GetMapping("/questions/{questionId}")
     public ResponseEntity<?> getAllCommentsByQuestionId(@PathVariable("questionId") String questionId) {
