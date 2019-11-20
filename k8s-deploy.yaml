@@ -16,84 +16,25 @@ spec:
     spec:
       containers:
         - name: comment-ms
-          image: islamahmad/eaproj-commentms:1.0.7
+          image: islamahmad/eaproj-commentms:1.0.8
           env:
+            - name: APP_VERSION
+              value: "islamahmad/eaproj-commentms:1.0.8"
+
             - name: SERVER_PORT
               value: "8080"
 
             #MONGODB
-            - name: MONGODB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: comment-ms
-                  key: MONGODB_HOST
-            - name: MONGODB_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: comment-ms
-                  key: MONGODB_USERNAME
-            - name: MONGODB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: comment-ms
-                  key: MONGODB_PORT
             - name: MONGODB_PASS
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: comment-ms
                   key: MONGODB_PASS
-            - name: MONGODB_AUTH
-              valueFrom:
-                configMapKeyRef:
-                  name: comment-ms
-                  key: MONGODB_AUTH
-            - name: MONGODB_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: comment-ms
-                  key: MONGODB_DATABASE
 
-            # SERVICES
-            - name: AUTHENTICATE_SERVICE
-              valueFrom:
-                configMapKeyRef:
-                  name: services-global
-                  key: AUTHENTICATE_SERVICE
-
-            #KAFKA
-            - name: KAFKA_BOOTSTRAP_SERVERS
-              valueFrom:
-                configMapKeyRef:
-                  name: services-global
-                  key: KAFKA_BOOTSTRAP_SERVERS
-            - name: TOPIC_NEW_QUESTION_COMMENT
-              valueFrom:
-                configMapKeyRef:
-                  name: kafka-global
-                  key: TOPIC_NEW_QUESTION_COMMENT
-            - name: TOPIC_NEW_ANSWER_COMMENT
-              valueFrom:
-                configMapKeyRef:
-                  name: kafka-global
-                  key: TOPIC_NEW_ANSWER_COMMENT
-            - name: TOPIC_BAN_QUESTION_COMMENT
-              valueFrom:
-                configMapKeyRef:
-                  name: kafka-global
-                  key: TOPIC_BAN_QUESTION_COMMENT
-            - name: SUBS_BAN_QUESTION_COMMENT_TO_COMMENT
-              valueFrom:
-                configMapKeyRef:
-                  name: kafka-global
-                  key: SUBS_BAN_QUESTION_COMMENT_TO_COMMENT
-            - name: TOPIC_BAN_ANSWER_COMMENT
-              valueFrom:
-                configMapKeyRef:
-                  name: kafka-global
-                  key: TOPIC_BAN_ANSWER_COMMENT
-            - name: SUBS_BAN_ANSWER_COMMENT_TO_COMMENT
-              valueFrom:
-                configMapKeyRef:
-                  name: kafka-global
-                  key: SUBS_BAN_ANSWER_COMMENT_TO_COMMENT
-
+          envFrom:
+            - configMapRef:
+                name: comment-ms
+            - configMapRef:
+                name: services-global
+            - configMapRef:
+                name: kafka-global

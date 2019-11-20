@@ -14,7 +14,10 @@ import ea.sof.shared.models.CommentQuestion;
 import ea.sof.shared.models.Response;
 import ea.sof.shared.models.TokenUser;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,8 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @Slf4j
 public class CommentController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceCircuitBreaker.class);
+
     @Autowired
     KafkaTemplate<String, String> kafkaTemplate;
 
@@ -50,8 +55,11 @@ public class CommentController {
 
     private Gson gson = new Gson();
 
+    @Value("${app.version}")
+    private String appVersion;
+
     @GetMapping("/health")
-    public ResponseEntity<String> index() {
+    public ResponseEntity<?> index() {
         String host = "Unknown host";
         try {
             host = InetAddress.getLocalHost().getHostName();
@@ -59,11 +67,14 @@ public class CommentController {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<>("Comments service. Host: " + host, HttpStatus.OK);
+        return new ResponseEntity<>("Comments service (" + appVersion + "). Host: " + host, HttpStatus.OK);
     }
+
 
     @GetMapping("/questions/{questionId}")
     public ResponseEntity<?> getAllCommentsByQuestionId(@PathVariable("questionId") String questionId) {
+        LOGGER.info("getAllCommentsByQuestionId :: questionId: " + questionId);
+
         List<CommentQuestionEntity> commentQuestionEntities = commentQuestionRepository.findCommentQuestionEntitiesByQuestionIdAndActiveEquals(questionId, 1);
         List<CommentQuestion> comments = commentQuestionEntities.stream().map(cm -> cm.toCommentQuestionModel()).collect(Collectors.toList());
 
@@ -75,6 +86,8 @@ public class CommentController {
 
     @GetMapping("/answers/{answerId}")
     public ResponseEntity<?> getAllCommentsByAnswerId(@PathVariable("answerId") String answerId) {
+        LOGGER.info("getAllCommentsByAnswerId :: answerId: " + answerId);
+
         List<CommentAnswerEntity> commentEntities = commentAnswerRepository.findCommentAnswerEntitiesByAnswerIdAndActiveEquals(answerId, 1);
         List<CommentAnswer> comments = commentEntities.stream().map(cm -> cm.toCommentAnswerModel()).collect(Collectors.toList());
 
@@ -87,7 +100,7 @@ public class CommentController {
 
     @PostMapping("/questions/{questionId}")
     public ResponseEntity<?> createCommentForQuestion(@RequestBody @Valid CommentReqModel commentReqModel, @PathVariable("questionId") String questionId,  HttpServletRequest request) {
-        log.info("\nAdd Comment for question :: New request: " + questionId);
+        LOGGER.info("Add Comment for question :: New request: " + questionId);
         //Check if request is authorized
         Response authCheckResp = isAuthorized(request.getHeader("Authorization"));
         if (!authCheckResp.getSuccess()) {
@@ -109,11 +122,11 @@ public class CommentController {
             //response.getData().put("comment", commentQuestionEntity.toCommentQuestionModel());
             response = new Response(true, "Comment added for question");
             response.addObject("comment",commentQuestionEntity.toCommentQuestionModel() );
-            log.info("Add Comment :: Saved successfully" + commentQuestionEntity.toString());
+            LOGGER.info("Add Comment :: Saved successfully" + commentQuestionEntity.toString());
         } catch (Exception ex) {
             response.setSuccess(false);
             response.setMessage(ex.getMessage());
-            log.warn("Add Comment for question :: Error. " + ex.getMessage());
+            LOGGER.warn("Add Comment for question :: Error. " + ex.getMessage());
         }
         //sending topic::topicNewQuestionComment
         kafkaTemplate.send(env.getProperty("topicNewQuestionComment"), gson.toJson(commentQuestionEntity));
@@ -127,7 +140,7 @@ public class CommentController {
         //Check if request is authorized
         Response authCheckResp = isAuthorized(request.getHeader("Authorization"));
         if (!authCheckResp.getSuccess()) {
-            log.warn("Invalid Token::UNAUTHORIZED");
+            LOGGER.warn("Invalid Token::UNAUTHORIZED");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response(false, "Invalid Token"));
         }
         //TokenUser decodedToken = (TokenUser) authCheckResp.getData().get("decoded_token");
@@ -144,11 +157,11 @@ public class CommentController {
             commentAnswerEntity = commentAnswerRepository.save(commentAnswerEntity);
             response.addObject("comment", commentAnswerEntity.toCommentAnswerModel());
 
-            log.info("Add Comment for answer:: Saved successfully" + commentAnswerEntity.toString());
+            LOGGER.info("Add Comment for answer:: Saved successfully" + commentAnswerEntity.toString());
         } catch (Exception ex) {
             response.setSuccess(false);
             response.setMessage(ex.getMessage());
-            log.warn("Add Comment for Answer :: Error. " + ex.getMessage());
+            LOGGER.warn("Add Comment for Answer :: Error. " + ex.getMessage());
         }
 
         kafkaTemplate.send(env.getProperty("topicNewAnswerComment"), gson.toJson(commentAnswerEntity));
@@ -157,28 +170,28 @@ public class CommentController {
     }
 
     private Response isAuthorized(String authHeader) {
-        log.info("JWT :: Checking authorization... ");
+        LOGGER.info("JWT :: Checking authorization... ");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("Invalid token. Header null or 'Bearer ' is not provided.");
+            LOGGER.warn("Invalid token. Header null or 'Bearer ' is not provided.");
             return new Response(false, "Invalid token");
         }
         try {
-            log.info("Calling authService.validateToken... ");
+            LOGGER.info("Calling authService.validateToken... ");
             ResponseEntity<Response> result = authService.validateToken(authHeader);
 
-            log.info("AuthService replied... ");
+            LOGGER.info("AuthService replied... ");
             if (!result.getBody().getSuccess()) {
-                log.warn("Filed to authorize. JWT is invalid");
+                LOGGER.warn("Filed to authorize. JWT is invalid");
                 return result.getBody();
 //				return new Response(false, "Invalid token");
             }
 
-            log.info("Authorized successfully");
+            LOGGER.info("Authorized successfully");
             return result.getBody();
 
         } catch (Exception e) {
-            log.warn("Failed. " + e.getMessage());
+            LOGGER.warn("Failed. " + e.getMessage());
             return new Response(false, "exception", e);
         }
     }

@@ -1,5 +1,5 @@
 DOCKERHUBREPO=islamahmad
-IMAGE=${DOCKERHUBREPO}/eaproj-commentms:1.0.7
+IMAGE=${DOCKERHUBREPO}/eaproj-commentms:1.0.8
 
 # ===== Maven =====
 maven-rebuild:
@@ -28,6 +28,7 @@ k8-repush-restart: k8-delete docker-push k8-install
 
 
 
+# ===== Easy pisy lemon squizzy =====
 
 build:
 	 mvn clean && mvn install && docker build -t ${IMAGE} . && docker push $(IMAGE)
