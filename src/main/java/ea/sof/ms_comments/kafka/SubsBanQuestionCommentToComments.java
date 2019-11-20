@@ -27,8 +27,9 @@ public class SubsBanQuestionCommentToComments {
 		//CommentQuestionEntity commentQuestionEntity = null;
 		String questionCommentId = "";
 		try {
-			Gson gson = new Gson();
-			questionCommentId = gson.fromJson(message, String.class);
+			//Gson gson = new Gson();
+			//questionCommentId = gson.fromJson(message, String.class);
+			questionCommentId = message;
 		} catch (Exception ex) {
 			LOGGER.error("SubsBanQuestionCommentToComments :: Failed to convert Json: " + ex.getMessage());
 		}

@@ -22,8 +22,9 @@ public class SubsBanAnswerCommentToComments {
         LOGGER.info("SubsBanAnswerCommentToComments :: New message from topic 'topicBanAnswerComment': " + message);
         String answerCommentId = "";
         try {
-            Gson gson = new Gson();
-            answerCommentId = gson.fromJson(message, String.class);
+            //Gson gson = new Gson();
+            //answerCommentId = gson.fromJson(message, String.class);
+            answerCommentId = message;
         } catch (Exception ex) {
             LOGGER.error("SubsBanAnswerCommentToComments :: Failed to convert Json: " + ex.getMessage());
         }
