@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
         - name: comment-ms
-          image: islamahmad/eaproj-commentms:1.0.10
+          image: islamahmad/eaproj-commentms:1.0.12
           env:
             - name: APP_VERSION
-              value: "islamahmad/eaproj-commentms:1.0.10"
+              value: "islamahmad/eaproj-commentms:1.0.12"
 
             - name: SERVER_PORT
               value: "8080"
