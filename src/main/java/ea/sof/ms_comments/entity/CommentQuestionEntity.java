@@ -25,7 +25,7 @@ public class CommentQuestionEntity {
     private String body;
     private LocalDateTime created;
     private String questionId;
-    private Integer active;
+    private Integer active = 1;
 
     public CommentQuestionEntity(CommentReqModel commentReqModel) {
         this.body = commentReqModel.getBody();

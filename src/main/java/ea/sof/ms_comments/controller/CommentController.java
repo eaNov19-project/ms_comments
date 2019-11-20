@@ -75,7 +75,7 @@ public class CommentController {
     public ResponseEntity<?> getAllCommentsByQuestionId(@PathVariable("questionId") String questionId) {
         LOGGER.info("getAllCommentsByQuestionId :: questionId: " + questionId);
 
-        List<CommentQuestionEntity> commentQuestionEntities = commentQuestionRepository.findCommentQuestionEntitiesByQuestionIdAndActiveEquals(questionId, 1);
+        List<CommentQuestionEntity> commentQuestionEntities = commentQuestionRepository.findAllCommentQuestionEntitiesByQuestionIdAndActiveEquals(questionId, 1);
         List<CommentQuestion> comments = commentQuestionEntities.stream().map(cm -> cm.toCommentQuestionModel()).collect(Collectors.toList());
 
         Response response = new Response(true, "");
@@ -88,7 +88,7 @@ public class CommentController {
     public ResponseEntity<?> getAllCommentsByAnswerId(@PathVariable("answerId") String answerId) {
         LOGGER.info("getAllCommentsByAnswerId :: answerId: " + answerId);
 
-        List<CommentAnswerEntity> commentEntities = commentAnswerRepository.findCommentAnswerEntitiesByAnswerIdAndActiveEquals(answerId, 1);
+        List<CommentAnswerEntity> commentEntities = commentAnswerRepository.findAllCommentAnswerEntitiesByAnswerIdAndActiveEquals(answerId, 1);
         List<CommentAnswer> comments = commentEntities.stream().map(cm -> cm.toCommentAnswerModel()).collect(Collectors.toList());
 
         Response response = new Response(true, "");
