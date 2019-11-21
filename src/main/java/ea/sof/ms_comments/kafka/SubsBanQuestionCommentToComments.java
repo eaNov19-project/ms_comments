@@ -1,7 +1,5 @@
 package ea.sof.ms_comments.kafka;
 
-import com.google.gson.Gson;
-
 import ea.sof.ms_comments.entity.CommentQuestionEntity;
 import ea.sof.ms_comments.repository.CommentQuestionRepository;
 
