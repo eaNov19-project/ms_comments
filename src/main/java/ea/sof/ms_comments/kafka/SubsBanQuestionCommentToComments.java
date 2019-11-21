@@ -31,6 +31,7 @@ public class SubsBanQuestionCommentToComments {
 			questionCommentId = gson.fromJson(message, String.class);
 		} catch (Exception ex) {
 			LOGGER.error("SubsBanQuestionCommentToComments :: Failed to convert Json: " + ex.getMessage());
+			return;
 		}
 
 		//CommentQuestionEntity questionEntity = commentQuestionRepository.findById(questionCommentId).orElse(null);
